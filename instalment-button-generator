@@ -6,9 +6,9 @@
     <title>Instalment Button Generator</title>
     <style>
         :root { --primary: #7384e1; --secondary: #7e59ad; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; padding: 20px; color: #333; }
-        .container { max-width: 850px; margin: 0 auto; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: #1e293b; margin-bottom: 5px; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f8fafc; padding: 20px; color: #333; margin: 0; }
+        .container { max-width: 850px; margin: 40px auto; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #1e293b; margin: 0 0 10px 0; }
         p.subtitle { text-align: center; color: #64748b; margin-bottom: 30px; }
         .input-group { margin-bottom: 25px; }
         label { display: block; font-weight: 700; margin-bottom: 8px; color: #475569; }
@@ -18,7 +18,7 @@
         .output-box { position: relative; }
         textarea { width: 100%; height: 350px; padding: 20px; border-radius: 12px; background: #1e293b; color: #e2e8f0; font-family: 'Consolas', monospace; font-size: 12px; resize: none; border: none; box-sizing: border-box; }
         .btn-copy { position: absolute; top: 40px; right: 15px; background: #00c896; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; z-index: 5; }
-        /* Preview UI */
+        /* Preview Styles */
         .installment-wrapper { display: flex; flex-direction: column; align-items: center; width: 100%; }
         .or-separator { color: #333; font-weight: 800; font-size: 18px; margin-bottom: 4px; }
         .border-animation-container { position: relative; padding: 4px; display: inline-block; border-radius: 16px; background: rgba(0, 0, 0, 0.05); }
@@ -29,8 +29,8 @@
 <body>
 
 <div class="container">
-    <h1>Button Generator</h1>
-    <p class="subtitle">Enter the billing link to generate your animated button code</p>
+    <h1>Instalment Button Generator</h1>
+    <p class="subtitle">Paste your EuroPolytech billing link below to generate the custom button code.</p>
     
     <div class="input-group">
         <label>1. Paste Direct Payment URL</label>
@@ -43,7 +43,7 @@
     </div>
 
     <div class="output-box">
-        <label>2. Copy Generated Code</label>
+        <label>2. Copy Your Website Code</label>
         <button class="btn-copy" onclick="copyToClipboard()">Copy Code</button>
         <textarea id="resultCode" readonly></textarea>
     </div>
@@ -53,7 +53,6 @@
 function updateGenerator() {
     const url = document.getElementById('payUrl').value || "YOUR_PAYMENT_LINK";
     
-    // Update Preview Area
     document.getElementById('livePreview').innerHTML = `
         <div class="installment-wrapper">
             <div class="or-separator">OR</div>
@@ -66,60 +65,57 @@ function updateGenerator() {
         </div>
     `;
 
-    // Build the final code block
-    const generatedHTML = `<div class="installment-wrapper">
-  <div class="or-separator">OR</div>
-  <div class="border-animation-container">
-    <button class="pay-btn-custom" onclick="openPaymentModal()">
-      Pay in 3 Instalments 
-      <svg class="check-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-2 15l-5-5 1.4-1.4 3.6 3.6 7.6-7.6L19 8l-9 9z"/></svg>
-    </button>
-  </div>
-</div>
-
-<div id="paymentModal" class="modal-overlay">
-  <div class="modal-content">
-    <button class="close-btn" onclick="closePaymentModal()" aria-label="Close">&times;</button>
-    <iframe id="paymentFrame" src="" frameborder="0"></iframe>
-  </div>
-</div>
-
-<style>
-.installment-wrapper { display: flex; flex-direction: column; align-items: center; margin: -35px auto 30px auto; width: 100%; }
-.or-separator { color: #333; font-weight: 800; font-size: 18px; margin-bottom: 4px; font-family: sans-serif; }
-.border-animation-container { position: relative; padding: 4px; display: inline-block; border-radius: 16px; overflow: hidden; background: rgba(0, 0, 0, 0.05); }
-.border-animation-container::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(transparent, #ff9900, #ffdb3a, #ff9900, transparent 30%); animation: rotate 1.5s linear infinite; display: none; }
-.border-animation-container:hover::before { display: block; }
-@keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-.pay-btn-custom { position: relative; z-index: 2; background: linear-gradient(90deg, #7384e1 0%, #7e59ad 100%); color: white; border: none; padding: 12px 28px; font-size: 18px; font-weight: 600; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-.check-icon { width: 20px; height: 20px; }
-.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); z-index: 10000; justify-content: center; align-items: center; }
-.modal-overlay.active { display: flex; }
-.modal-content { background: white; width: 95%; max-width: 500px; height: 90vh; border-radius: 20px; position: relative; overflow: hidden; }
-#paymentFrame { width: 100%; height: 100%; display: block; }
-.close-btn { position: absolute; top: 15px; right: 15px; width: 40px; height: 40px; background: #fff; color: #000; border: 2px solid #eee; border-radius: 50%; font-size: 28px; font-weight: bold; cursor: pointer; z-index: 10001; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
-</style>
-
-<script>
-function openPaymentModal() {
-  const modal = document.getElementById('paymentModal');
-  const frame = document.getElementById('paymentFrame');
-  if (modal && frame) {
-      modal.style.display = 'flex';
-      setTimeout(function() { modal.classList.add('active'); }, 10);
-      if (!frame.src) frame.src = "${url}";
-  }
-}
-function closePaymentModal() {
-  const modal = document.getElementById('paymentModal');
-  if (modal) {
-      modal.classList.remove('active');
-      setTimeout(function() { modal.style.display = 'none'; }, 300);
-  }
-}
-window.onclick = function(e) { if (e.target.classList.contains('modal-overlay')) closePaymentModal(); }
-<` + `/script>
-`;
+    const generatedHTML = '\n' +
+'<div class="installment-wrapper">\n' +
+'  <div class="or-separator">OR</div>\n' +
+'  <div class="border-animation-container">\n' +
+'    <button class="pay-btn-custom" onclick="openPaymentModal()">\n' +
+'      Pay in 3 Instalments \n' +
+'      <svg class="check-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-2 15l-5-5 1.4-1.4 3.6 3.6 7.6-7.6L19 8l-9 9z"/></svg>\n' +
+'    </button>\n' +
+'  </div>\n' +
+'</div>\n\n' +
+'<div id="paymentModal" class="modal-overlay">\n' +
+'  <div class="modal-content">\n' +
+'    <button class="close-btn" onclick="closePaymentModal()" aria-label="Close">&times;</button>\n' +
+'    <iframe id="paymentFrame" src="" frameborder="0"></iframe>\n' +
+'  </div>\n' +
+'</div>\n\n' +
+'<style>\n' +
+'.installment-wrapper { display: flex; flex-direction: column; align-items: center; margin: -35px auto 30px auto; width: 100%; }\n' +
+'.or-separator { color: #333; font-weight: 800; font-size: 18px; margin-bottom: 4px; font-family: sans-serif; }\n' +
+'.border-animation-container { position: relative; padding: 4px; display: inline-block; border-radius: 16px; overflow: hidden; background: rgba(0, 0, 0, 0.05); }\n' +
+'.border-animation-container::before { content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(transparent, #ff9900, #ffdb3a, #ff9900, transparent 30%); animation: rotate 1.5s linear infinite; display: none; }\n' +
+'.border-animation-container:hover::before { display: block; }\n' +
+'@keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }\n' +
+'.pay-btn-custom { position: relative; z-index: 2; background: linear-gradient(90deg, #7384e1 0%, #7e59ad 100%); color: white; border: none; padding: 12px 28px; font-size: 18px; font-weight: 600; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }\n' +
+'.check-icon { width: 20px; height: 20px; }\n' +
+'.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); z-index: 10000; justify-content: center; align-items: center; }\n' +
+'.modal-overlay.active { display: flex; }\n' +
+'.modal-content { background: white; width: 95%; max-width: 500px; height: 90vh; border-radius: 20px; position: relative; overflow: hidden; }\n' +
+'#paymentFrame { width: 100%; height: 100%; display: block; }\n' +
+'.close-btn { position: absolute; top: 15px; right: 15px; width: 40px; height: 40px; background: #fff; color: #000; border: 2px solid #eee; border-radius: 50%; font-size: 28px; font-weight: bold; cursor: pointer; z-index: 10001; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }\n' +
+'</style>\n\n' +
+'<script>\n' +
+'function openPaymentModal() {\n' +
+'  const modal = document.getElementById("paymentModal");\n' +
+'  const frame = document.getElementById("paymentFrame");\n' +
+'  if (modal && frame) {\n' +
+'      modal.style.display = "flex";\n' +
+'      setTimeout(function() { modal.classList.add("active"); }, 10);\n' +
+'      if (!frame.src) frame.src = "' + url + '";\n' +
+'  }\n' +
+'}\n' +
+'function closePaymentModal() {\n' +
+'  const modal = document.getElementById("paymentModal");\n' +
+'  if (modal) {\n' +
+'      modal.classList.remove("active");\n' +
+'      setTimeout(function() { modal.style.display = "none"; }, 300);\n' +
+'  }\n' +
+'}\n' +
+'window.onclick = function(e) { if (e.target.classList.contains("modal-overlay")) closePaymentModal(); }\n' +
+'<' + '/script>\n' +
+'';
 
     document.getElementById('resultCode').value = generatedHTML.trim();
 }
@@ -128,7 +124,7 @@ function copyToClipboard() {
     const box = document.getElementById('resultCode');
     box.select();
     document.execCommand('copy');
-    alert("Copied to clipboard!");
+    alert("Code copied successfully!");
 }
 
 updateGenerator();
