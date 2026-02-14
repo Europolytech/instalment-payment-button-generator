@@ -5,20 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EuroPolytech Button Generator</title>
     <style>
-        :root { --primary: #7384e1; --secondary: #7e59ad; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; padding: 20px; color: #333; margin: 0; }
-        .container { max-width: 850px; margin: 40px auto; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: #1e293b; margin: 0 0 10px 0; }
-        p.subtitle { text-align: center; color: #64748b; margin-bottom: 30px; }
-        .input-group { margin-bottom: 25px; }
-        label { display: block; font-weight: 700; margin-bottom: 8px; color: #475569; }
-        input { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
-        .preview-box { background: #fff; border: 2px dashed #cbd5e1; padding: 50px 20px; border-radius: 15px; margin: 30px 0; text-align: center; position: relative; }
-        .preview-label { position: absolute; top: -12px; left: 20px; background: white; padding: 0 10px; font-size: 12px; font-weight: bold; color: #94a3b8; }
-        .output-box { position: relative; }
-        textarea { width: 100%; height: 350px; padding: 20px; border-radius: 12px; background: #1e293b; color: #e2e8f0; font-family: 'Consolas', monospace; font-size: 12px; resize: none; border: none; box-sizing: border-box; }
-        .btn-copy { position: absolute; top: 40px; right: 15px; background: #00c896; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; z-index: 5; }
-        /* Preview Styles Only */
+        body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; padding: 20px; color: #333; }
+        .container { max-width: 800px; margin: 40px auto; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+        input { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 16px; margin-bottom: 20px; }
+        textarea { width: 100%; height: 300px; padding: 20px; border-radius: 12px; background: #1e293b; color: #e2e8f0; font-family: monospace; font-size: 12px; border: none; }
+        .btn-copy { background: #00c896; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-bottom: 10px; }
+        /* Preview UI */
         .installment-wrapper { display: flex; flex-direction: column; align-items: center; width: 100%; }
         .or-separator { color: #333; font-weight: 800; font-size: 18px; margin-bottom: 4px; }
         .border-animation-container { position: relative; padding: 4px; display: inline-block; border-radius: 16px; background: rgba(0, 0, 0, 0.05); }
@@ -29,43 +21,30 @@
 
 <div class="container">
     <h1>Instalment Button Generator</h1>
-    <p class="subtitle">Use this to fix the <b>CP1007 Error</b> by using a Window Popup instead of an Iframe.</p>
-    
-    <div class="input-group">
-        <label>1. Paste Zoho Billing URL</label>
-        <input type="text" id="payUrl" placeholder="https://billing.europolytech.academy/..." oninput="updateGenerator()">
-    </div>
+    <label>Paste Zoho Billing URL:</label>
+    <input type="text" id="payUrl" placeholder="https://billing.europolytech.academy/..." oninput="generate()">
 
-    <div class="preview-box">
-        <span class="preview-label">LIVE PREVIEW</span>
-        <div id="livePreview"></div>
-    </div>
+    <div id="preview" style="margin: 30px 0;"></div>
 
-    <div class="output-box">
-        <label>2. Copy & Paste this Code to Your Site</label>
-        <button class="btn-copy" onclick="copyToClipboard()">Copy Code</button>
-        <textarea id="resultCode" readonly></textarea>
-    </div>
+    <button class="btn-copy" onclick="copy()">Copy Code</button>
+    <textarea id="result" readonly></textarea>
 </div>
 
 <script>
-function updateGenerator() {
-    const url = document.getElementById('payUrl').value || "YOUR_PAYMENT_LINK";
+function generate() {
+    const url = document.getElementById('payUrl').value || "YOUR_LINK";
     
-    document.getElementById('livePreview').innerHTML = `
+    // Preview
+    document.getElementById('preview').innerHTML = `
         <div class="installment-wrapper">
             <div class="or-separator">OR</div>
             <div class="border-animation-container">
-                <div class="pay-btn-custom">
-                    Pay in 3 Instalments 
-                    <svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-2 15l-5-5 1.4-1.4 3.6 3.6 7.6-7.6L19 8l-9 9z"/></svg>
-                </div>
+                <div class="pay-btn-custom">Pay in 3 Instalments</div>
             </div>
-        </div>
-    `;
+        </div>`;
 
-    // BUILDING THE NEW CODE (WINDOW POPUP VERSION)
-    const generatedHTML = '\n' +
+    // The generated snippet logic
+    const snippet = '\n' +
 '<div class="installment-wrapper">\n' +
 '  <div class="or-separator">OR</div>\n' +
 '  <div class="border-animation-container">\n' +
@@ -82,30 +61,27 @@ function updateGenerator() {
 '.border-animation-container::before { content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(transparent, #ff9900, #ffdb3a, #ff9900, transparent 30%); animation: rotate 1.5s linear infinite; display: none; }\n' +
 '.border-animation-container:hover::before { display: block; }\n' +
 '@keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }\n' +
-'.pay-btn-custom { position: relative; z-index: 2; background: linear-gradient(90deg, #7384e1 0%, #7e59ad 100%); color: white; border: none; padding: 12px 28px; font-size: 18px; font-weight: 600; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: transform 0.2s; }\n' +
-'.pay-btn-custom:active { transform: scale(0.98); }\n' +
+'.pay-btn-custom { position: relative; z-index: 2; background: linear-gradient(90deg, #7384e1 0%, #7e59ad 100%); color: white; border: none; padding: 12px 28px; font-size: 18px; font-weight: 600; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }\n' +
 '</style>\n\n' +
 '<script>\n' +
 'function openPaymentWindow() {\n' +
 '  const url = "' + url + '";\n' +
 '  const w = 550; const h = 800;\n' +
-'  const left = (screen.width/2)-(w/2); const top = (screen.height/2)-(h/2);\n' +
+'  const left = (window.screen.width/2)-(w/2); const top = (window.screen.height/2)-(h/2);\n' +
 '  window.open(url, "Payment", "width="+w+",height="+h+",top="+top+",left="+left+",scrollbars=yes,resizable=yes");\n' +
 '}\n' +
 '<' + '/script>\n' +
 '';
 
-    document.getElementById('resultCode').value = generatedHTML.trim();
+    document.getElementById('result').value = snippet;
 }
 
-function copyToClipboard() {
-    const box = document.getElementById('resultCode');
-    box.select();
+function copy() {
+    document.getElementById('result').select();
     document.execCommand('copy');
-    alert("Fixed code copied! This will now work without the CP1007 error.");
+    alert("Code copied!");
 }
-
-updateGenerator();
+generate();
 </script>
 </body>
 </html>
